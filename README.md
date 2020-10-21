@@ -130,7 +130,7 @@ s.owlReasoner.getOWLProfile();												// prints to console the name of the O
     
 2. Change into the `simpleowlapi/` directory.
 
-3. Type `mvn clean package`.  On build completion, the `target/` directory will contain a two versions of the library: `simpleowlapi-${version}.jar` and `simpleowlapi-${version}-jar-with-dependencies.jar`.
+3. Type `mvn clean package`.  On build completion, the `target/` directory will contain two versions of the library: `simpleowlapi-${version}.jar` and `simpleowlapi-${version}-jar-with-dependencies.jar`.
 
 ### License and contributions
 The simpleOWLAPI library is copyrighted by [Kody Moodley](https://sites.google.com/site/kodymoodley/) and released under the [GNU Affero License](https://github.com/kodymoodley/simpleowlapi/blob/master/LICENSE.md).
