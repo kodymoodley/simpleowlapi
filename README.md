@@ -115,6 +115,22 @@ s.owlReasoner.getName();													// prints to console the name of the OWL re
 s.owlReasoner.getOWLProfile();												// prints to console the name of the OWL 2 profile which the selected OWL reasoner supports
 
 ```
+### For Developers: Building the library from source
+
+##### Requirements:
+
++ Apache's [Maven](http://maven.apache.org/index.html).
++ A tool for checking out a [Git](http://git-scm.com/) repository.
+
+##### Steps:
+
+1. Get a copy of the code:
+
+        git clone https://github.com/kodymoodley/simpleowlapi.git
+    
+2. Change into the `simpleowlapi/` directory.
+
+3. Type `mvn clean package`.  On build completion, the `target/` directory will contain a two versions of the library: `simpleowlapi-${version}.jar` and `simpleowlapi-${version}-jar-with-dependencies.jar`.
 
 ### License and contributions
 The simpleOWLAPI library is copyrighted by [Kody Moodley](https://sites.google.com/site/kodymoodley/) and released under the [GNU Affero License](https://github.com/kodymoodley/simpleowlapi/blob/master/LICENSE.md).
