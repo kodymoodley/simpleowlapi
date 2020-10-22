@@ -25,7 +25,19 @@ The simpleOWLAPI release for Jupyter notebooks is bundled into one .jar file for
 4. The [Pellet](https://github.com/stardog-union/pellet) OWL reasoner released under a dual license [GNU Affero](https://www.gnu.org/licenses/agpl-3.0.en.html) for open source usage and under commercial licenses for commercial usage - in the latter case, the [developers](https://github.com/stardog-union/pellet/graphs/contributors) of Pellet need to be contacted.
 5. The [ELK](https://github.com/liveontologies/elk-reasoner) OWL reasoner released under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
 
-##### Usage
+### Usage in Maven projects
+
+Include the following dependency in your pom.xml
+
+```xml
+<dependency>
+    <groupId>net.sourceforge.simpleowlapi</groupId>
+    <artifactId>simpleowlapi-lib</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+##### Examples and documentation
 
 For more information on how to use simpleOWLAPI, see the [Javadocs](https://kodymoodley.github.io/simpleowlapi/doc/) and examples below.
 
