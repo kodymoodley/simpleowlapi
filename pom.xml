@@ -1,12 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.semanticweb.owl</groupId>
-	<artifactId>simpleowlapi</artifactId>
+	<groupId>net.sourceforge.simpleowlapi</groupId>
+	<artifactId>simpleowlapi-lib</artifactId>
 	<version>0.0.1</version>
 	<name>simpleOWLAPI</name>
-	<description>Wrapper for the OWLAPI which allows construction of OWL ontologies more concisely using the Manchester OWL syntax. The library has been developed for educational purposes to allow students to learn how to construct ontologies programmatically without having to know the more extensive OWLAPI, and to integrate the process with other programmatic linked data processing, querying and reasoning workflows.</description>
+	<description>A light-weight wrapper for the OWLAPI enabling rapid and concise development of OWL ontologies using Manchester OWL Syntax.</description>
 	<dependencies>
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
@@ -51,7 +52,6 @@
 	</dependencies>
 	<build>
 		<plugins>
-			<!-- any other plugins -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
