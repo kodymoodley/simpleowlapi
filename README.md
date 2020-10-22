@@ -37,11 +37,11 @@ Include the following dependency in your pom.xml
 </dependency>
 ```
 
-##### Examples and documentation
+### Examples and documentation
 
 For more information on how to use simpleOWLAPI, see the [Javadocs](https://kodymoodley.github.io/simpleowlapi/doc/) and examples below.
 
-### Example usage: ontology editing
+##### Examples: ontology editing
 
 ```java
 import org.semanticweb.owl.simpleowlapi.*;
@@ -98,7 +98,7 @@ s.removeAxiom("Penguin subClassOf eats some Fish"); // remove an axiom from the 
 
 ```
 
-### Example usage: reasoning
+##### Examples: reasoning
 
 ```java
 SimpleOWLAPIFactory s = SimpleOWLAPIFactory.getInstance();
