@@ -1,4 +1,6 @@
 # simpleOWLAPI
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
+
 simpleOWLAPI is a light-weight wrapper for the [OWLAPI](https://github.com/owlcs/owlapi) that enables faster development of [OWL](https://www.w3.org/TR/owl2-overview/) ontologies with more concise code using the power of the [Manchester OWL Syntax](https://www.w3.org/TR/owl2-manchester-syntax/) and related parsers. The wrapper does not make use of all the features of the more powerful OWLAPI. Rather, it is designed specifically for rapid and concise ontology construction in workflows involving semantic data engineering. It can also be used in contexts such as educational and demonstration settings in courses, workshops and tutorials. In particular, the library can also be used in [Jupyter notebooks](https://jupyter.org/) using a Java kernel such as the [IJava kernel](https://github.com/SpencerPark/IJava).
 
 ### Usage in Jupyter notebooks
