@@ -6,8 +6,28 @@
 	<groupId>net.sourceforge.simpleowlapi</groupId>
 	<artifactId>simpleowlapi-lib</artifactId>
 	<version>0.0.1</version>
-	<name>simpleOWLAPI</name>
+	<name>simpleOWLAPI wrapper for the OWLAPI</name>
 	<description>A light-weight wrapper for the OWLAPI enabling rapid and concise development of OWL ontologies using Manchester OWL Syntax.</description>
+	<url>https://simpleowlapi.sourceforge.io/</url>
+	<licenses>
+  	<license>
+    	<name>GNU Affero General Public License, Version 3.0</name>
+    	<url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
+  	</license>
+	</licenses>
+	<developers>
+    <developer>
+      <name>Kody Moodley</name>
+      <email>kody.moodley@gmail.com</email>
+      <organization>com.github.kodymoodley</organization>
+      <organizationUrl>https://kodymoodley.github.io/</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+  	<connection>scm:git:git://github.com/kodymoodley/simpleowlapi.git</connection>
+  	<developerConnection>scm:git:ssh://github.com:kodymoodley/simpleowlapi.git</developerConnection>
+  	<url>https://github.com/kodymoodley/simpleowlapi</url>
+	</scm>
 	<dependencies>
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
