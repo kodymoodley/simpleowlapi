@@ -14,7 +14,7 @@ simpleOWLAPI is a light-weight wrapper for the [OWLAPI](https://github.com/owlcs
 
 ##### Importing
 
-When using simpleOWLAPI with [Jupyter notebooks](https://jupyter.org/) using the [IJava kernel](https://github.com/SpencerPark/IJava), importing the library using ``%maven`` and ``%%loadFromPOM`` [magics](https://github.com/SpencerPark/IJava/blob/master/docs/magics.md) is known to cause problems due to [.ivy2](https://ant.apache.org/ivy/history/2.5.0/settings/caches.html) caching conflicts. The solution is to download the .jar file of simpleOWLAPI **with packaged dependencies** from the [releases](https://github.com/kodymoodley/simpleowlapi/releases/) section and import this file manually into your IJava notebook by running the ``%jars path/to/jar/file/simpleowlapi-lib-[version].jar`` command from a single dedicated cell in the notebook.
+When using simpleOWLAPI with [Jupyter notebooks](https://jupyter.org/) using the [IJava kernel](https://github.com/SpencerPark/IJava), importing the library using ``%maven`` and ``%%loadFromPOM`` [magics](https://github.com/SpencerPark/IJava/blob/master/docs/magics.md) is known to cause problems due to [.ivy2](https://ant.apache.org/ivy/history/2.5.0/settings/caches.html) caching conflicts. The solution is to download the .jar file of simpleOWLAPI **with packaged dependencies** from the [releases](https://github.com/kodymoodley/simpleowlapi/releases/) section and import this file manually into your IJava notebook by running the ``%jars path/to/jar/file/simpleowlapi-lib-${version}.jar`` command from a single dedicated cell in the notebook.
 
 ##### Dependencies
 
