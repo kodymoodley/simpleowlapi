@@ -14,7 +14,7 @@ simpleOWLAPI is a light-weight wrapper for the [OWLAPI](https://github.com/owlcs
 
 ##### Importing
 
-When using simpleOWLAPI with [Jupyter notebooks](https://jupyter.org/) using the [IJava kernel](https://github.com/SpencerPark/IJava), importing the library using ``%maven`` and ``%%loadFromPOM`` [magics](https://github.com/SpencerPark/IJava/blob/master/docs/magics.md) is known to cause problems due to [.ivy2](https://ant.apache.org/ivy/history/2.5.0/settings/caches.html) caching conflicts. The solution is to download the .jar file of simpleOWLAPI **with packaged dependencies** from the [releases](https://github.com/kodymoodley/simpleowlapi/releases/) section and import this file manually into your IJava notebook by running the ``%jars path/to/jar/file/simpleowlapi-[version].jar`` command from a single dedicated cell in the notebook.
+When using simpleOWLAPI with [Jupyter notebooks](https://jupyter.org/) using the [IJava kernel](https://github.com/SpencerPark/IJava), importing the library using ``%maven`` and ``%%loadFromPOM`` [magics](https://github.com/SpencerPark/IJava/blob/master/docs/magics.md) is known to cause problems due to [.ivy2](https://ant.apache.org/ivy/history/2.5.0/settings/caches.html) caching conflicts. The solution is to download the .jar file of simpleOWLAPI **with packaged dependencies** from the [releases](https://github.com/kodymoodley/simpleowlapi/releases/) section and import this file manually into your IJava notebook by running the ``%jars path/to/jar/file/simpleowlapi-lib-[version].jar`` command from a single dedicated cell in the notebook.
 
 ##### Dependencies
 
@@ -145,7 +145,7 @@ s.owlReasoner.getOWLProfile(); // prints to console the name of the OWL 2 profil
     
 2. Change into the `simpleowlapi/` directory.
 
-3. Type `mvn clean package`.  On build completion, the `target/` directory will contain two versions of the library: `simpleowlapi-${version}.jar` and `simpleowlapi-${version}-jar-with-dependencies.jar`.
+3. Type `mvn clean package`.  On build completion, the `target/` directory will contain two versions of the library: `simpleowlapi-lib-${version}.jar` and `simpleowlapi-lib-${version}-jar-with-dependencies.jar`.
 
 ### License and contributions
 The simpleOWLAPI library is copyrighted by [Kody Moodley](https://sites.google.com/site/kodymoodley/) and released under the [GNU Affero License](https://github.com/kodymoodley/simpleowlapi/blob/master/LICENSE.md).
