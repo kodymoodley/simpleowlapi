@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.simpleowlapi</groupId>
 	<artifactId>simpleowlapi-lib</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<name>simpleOWLAPI wrapper for the OWLAPI</name>
 	<description>A light-weight wrapper for the OWLAPI enabling rapid and concise development of OWL ontologies using Manchester OWL Syntax.</description>
 	<url>https://simpleowlapi.sourceforge.io/</url>
@@ -15,6 +15,16 @@
     	<url>https://www.gnu.org/licenses/agpl-3.0.txt</url>
   	</license>
 	</licenses>
+	<distributionManagement>
+  	<snapshotRepository>
+    	<id>ossrh</id>
+    	<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  	</snapshotRepository>
+  	<repository>
+    	<id>ossrh</id>
+    	<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+  	</repository>
+	</distributionManagement>
 	<developers>
     <developer>
       <name>Kody Moodley</name>
@@ -88,6 +98,57 @@
 					</descriptorRefs>
 				</configuration>
 			</plugin>
+			<plugin>
+      	<groupId>org.sonatype.plugins</groupId>
+      	<artifactId>nexus-staging-maven-plugin</artifactId>
+      	<version>1.6.7</version>
+      	<extensions>true</extensions>
+      	<configuration>
+        	<serverId>ossrh</serverId>
+        	<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+        	<autoReleaseAfterClose>true</autoReleaseAfterClose>
+      	</configuration>
+    	</plugin>
+    	<plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+      	<artifactId>maven-source-plugin</artifactId>
+      	<version>2.2.1</version>
+      	<executions>
+        	<execution>
+          	<id>attach-sources</id>
+          	<goals>
+            	<goal>jar-no-fork</goal>
+          	</goals>
+        	</execution>
+      	</executions>
+    	</plugin>
+    	<plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+      	<artifactId>maven-javadoc-plugin</artifactId>
+      	<version>2.9.1</version>
+      	<executions>
+        	<execution>
+          	<id>attach-javadocs</id>
+          	<goals>
+            	<goal>jar</goal>
+          	</goals>
+        	</execution>
+      	</executions>
+    	</plugin>
+    	<plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+      	<artifactId>maven-gpg-plugin</artifactId>
+      	<version>1.5</version>
+      	<executions>
+        	<execution>
+          	<id>sign-artifacts</id>
+          	<phase>verify</phase>
+          	<goals>
+            	<goal>sign</goal>
+          	</goals>
+        	</execution>
+      	</executions>
+    	</plugin>
 		</plugins>
 	</build>
 </project>
