@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.ManchesterSyntaxDocumentFormat;
+import org.semanticweb.owlapi.io.OWLOntologyInputSourceException;
 import org.semanticweb.owlapi.io.OWLParserException;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
 import org.semanticweb.owlapi.model.AxiomType;
@@ -1094,6 +1095,9 @@ public class SimpleOWLAPIFactory
 			System.out.println("Loaded ontology: <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + "> into workspace.");
 		}
 		catch (OWLOntologyCreationException ooce) {
+			System.out.println("SimpleOWLAPI LOADING ERROR: either the ontology file " + filepath + " could not be found, it could not be parsed, or it already exists in your workspace.");
+		}
+		catch (OWLOntologyInputSourceException ooise) {
 			System.out.println("SimpleOWLAPI LOADING ERROR: either the ontology file " + filepath + " could not be found, it could not be parsed, or it already exists in your workspace.");
 		}
 

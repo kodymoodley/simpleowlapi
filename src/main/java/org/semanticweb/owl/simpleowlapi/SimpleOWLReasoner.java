@@ -100,9 +100,11 @@ public class SimpleOWLReasoner
         	this.reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY);
         }
         catch (org.mindswap.pellet.exceptions.InconsistentOntologyException ioe1) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: ontology classification is not possible because <" + ontologyIRI.toString() + ">" + " is inconsistent!");
         }
         catch (org.semanticweb.owlapi.reasoner.InconsistentOntologyException ioe2) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: ontology classification is not possible because <" + ontologyIRI.toString() + ">" + " is inconsistent!");
         }
         this.parser = parser;
@@ -146,6 +148,7 @@ public class SimpleOWLReasoner
 	        System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: computing all subclasses of " + classEx + " is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
         }
     }
@@ -171,6 +174,7 @@ public class SimpleOWLReasoner
 	        System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: computing all superclasses of " + classEx + " is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
         }
     }
@@ -192,6 +196,7 @@ public class SimpleOWLReasoner
 	        System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: computing all unsatisfiable classes is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
         }
     }
@@ -200,6 +205,7 @@ public class SimpleOWLReasoner
     */
     public void isConsistent(){
         reasoner.flush();
+        System.out.println();
         if (reasoner.isConsistent())
         	System.out.println("Yes - <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + "> is consistent!");
         else
@@ -226,6 +232,7 @@ public class SimpleOWLReasoner
 	        System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: checking for entailed types is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
         }
     }
@@ -248,6 +255,7 @@ public class SimpleOWLReasoner
 	        System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: checking for entailed types is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
         }
     }
@@ -275,6 +283,7 @@ public class SimpleOWLReasoner
 	        	System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: checking for entailed object property assertions is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
         }
     }
@@ -295,6 +304,7 @@ public class SimpleOWLReasoner
 	        System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: checking for entailed object property assertions is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
         }
     }
@@ -316,6 +326,7 @@ public class SimpleOWLReasoner
     */
     public void isEntailed(String axiomStr){
         parser.setString(axiomStr);
+        System.out.println();
         OWLAxiom axiom = parser.getParser().parseAxiom();
         this.reasoner.flush();
         try {
@@ -326,6 +337,7 @@ public class SimpleOWLReasoner
 	        System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: checking if Axiom: " + axiomStr + " is entailed is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
         }
     }
@@ -334,6 +346,7 @@ public class SimpleOWLReasoner
      * @param clsStr a string representation of an OWLClassExpression in Manchester OWL Syntax   
     */
     public void isSatisfiable(String clsStr){
+    	System.out.println();
     	OWLClassExpression cls = parser.createClassExpression(clsStr);
         reasoner.flush();
         try {
@@ -344,6 +357,7 @@ public class SimpleOWLReasoner
 	        System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
+    		System.out.println();
         	System.out.println("SimpleOWLAPI REASONING ERROR: checking if Class: " + clsStr + " is satisfiable is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
         }
     }
@@ -377,10 +391,12 @@ public class SimpleOWLReasoner
 				}
 			}
 			else {
+				System.out.println();
 				System.out.println("SimpleOWLAPI REASONING ERROR: explanation of class UNsatisfiability is not possible because Class: " + Parser.renderer.render(cls) + " is satisfiable!");
 			}
 		}
 		catch (InconsistentOntologyException ioe) {
+			System.out.println();
 			System.out.println("SimpleOWLAPI REASONING ERROR: explanation of class unsatisfiability is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
 		}
 	}
@@ -408,6 +424,7 @@ public class SimpleOWLReasoner
 			}
 		}
 		else {
+			System.out.println();
 			System.out.println("SimpleOWLAPI REASONING ERROR: explanation for inconsistency of <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + "> is not possible because it " + " is consistent!");
 		}
 	}
@@ -437,6 +454,7 @@ public class SimpleOWLReasoner
 			}
 		}
 		catch (InconsistentOntologyException ioe) {
+			System.out.println();
 			System.out.println("SimpleOWLAPI REASONING ERROR: explanation for entailment of " + axiomStr + " is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
 		}
 	}
