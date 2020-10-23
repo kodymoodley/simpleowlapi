@@ -25,7 +25,7 @@ The simpleOWLAPI release for Jupyter notebooks is bundled into one .jar file for
 3. The [JFact](http://jfact.sourceforge.net/) OWL reasoner released under the [GNU Lesser General Public License (LGPL)](https://www.gnu.org/licenses/lgpl-3.0.html).
 4. The [Pellet](https://github.com/stardog-union/pellet) OWL reasoner released under a dual license [GNU Affero](https://www.gnu.org/licenses/agpl-3.0.en.html) for open source usage and under commercial licenses for commercial usage - in the latter case, the [developers](https://github.com/stardog-union/pellet/graphs/contributors) of Pellet need to be contacted.
 5. The [ELK](https://github.com/liveontologies/elk-reasoner) OWL reasoner released under the [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0).
-6. The [owlexplanation] library released under the [GNU Lesser General Public License (LGPL)](https://www.gnu.org/licenses/lgpl-3.0.html).
+6. The [owlexplanation](https://github.com/matthewhorridge/owlexplanation) library released under the [GNU Lesser General Public License (LGPL)](https://www.gnu.org/licenses/lgpl-3.0.html).
 
 ### Usage in Maven projects
 
