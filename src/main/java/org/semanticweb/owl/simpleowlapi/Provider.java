@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /** Represents a Provider class providing a default implementation for getting a short form, human-readable label for an entity with an IRI from an ontology.
  * @author Kody Moodley
  * @author https://sites.google.com/site/kodymoodley/
- * @version 0.0.1
+ * @version 1.0.1
 */
 public class Provider extends CachingBidirectionalShortFormProvider 
 {

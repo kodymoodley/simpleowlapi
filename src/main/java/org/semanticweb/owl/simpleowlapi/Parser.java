@@ -31,7 +31,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /** Represents a Parser wrapper class for working with the Manchester OWL syntax.
  * @author Kody Moodley
  * @author https://sites.google.com/site/kodymoodley/
- * @version 0.0.1
+ * @version 1.0.1
 */
 public class Parser
 {

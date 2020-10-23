@@ -25,7 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /** Represents a SelectedReasoner class that catalogues / enumerates metadata about OWL 2 reasoners which simpleOWLAPI is able to interact with. The client can use instances of this class to indicate their selected reasoner. 
  * @author Kody Moodley
  * @author https://sites.google.com/site/kodymoodley/
- * @version 0.0.1
+ * @version 1.0.1
 */
 public class SelectedReasoner implements Serializable{
 	/**

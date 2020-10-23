@@ -9,8 +9,8 @@ import java.util.Set;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.ManchesterSyntaxDocumentFormat;
+import org.semanticweb.owlapi.io.OWLParserException;
 import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterOWLSyntaxOWLObjectRendererImpl;
-import org.semanticweb.owlapi.manchestersyntax.renderer.ParserException;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -25,12 +25,15 @@ import org.semanticweb.owlapi.model.OWLIrreflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyAlreadyExistsException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyDocumentAlreadyExistsException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 import org.semanticweb.owlapi.model.OWLReflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLSymmetricObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLTransitiveObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.UnknownOWLOntologyException;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.reasoner.OWLReasonerFactory;
 
@@ -65,7 +68,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 /** Core class for simpleOWLAPI which provides access to all methods for constructing and editing OWL ontologies. 
  * @author Kody Moodley
  * @author https://sites.google.com/site/kodymoodley/
- * @version 0.0.1
+ * @version 1.0.1
 */
 public class SimpleOWLAPIFactory
 {
@@ -103,10 +106,19 @@ public class SimpleOWLAPIFactory
     */
 	private static ManchesterOWLSyntaxOWLObjectRendererImpl renderer = Parser.renderer;
 
-	/** Constructor for SimpleOWLAPIFactory
+	/** Private constructor for SimpleOWLAPIFactory
 	 * @param selectedReasoner a SelectedReasoner instance 
 	*/
 	private SimpleOWLAPIFactory(SelectedReasoner selectedReasoner) {
+		ontologyManager=OWLManager.createOWLOntologyManager();
+		setOWLReasoner(selectedReasoner);
+		fullIRIRendering = false;
+		dataFactory = new OWLDataFactoryImpl();
+	}
+	
+	/** Public constructor for SimpleOWLAPIFactory
+	*/
+	public SimpleOWLAPIFactory() {
 		ontologyManager=OWLManager.createOWLOntologyManager();
 		setOWLReasoner(selectedReasoner);
 		fullIRIRendering = false;
@@ -181,17 +193,28 @@ public class SimpleOWLAPIFactory
 	*/
 	public OWLOntology createOntology(String iriStr) throws OWLOntologyCreationException
 	{
+		System.out.println();
 		// Ontology IRI
 		IRI ontologyIRI = IRI.create(iriStr);
 		// Create a fresh ontology
-		OWLOntology ontology = ontologyManager.createOntology(ontologyIRI);
-		System.out.println("Created ontology: " + ontologyIRI);
-
-		if (selectedOntology==null){
+		OWLOntology ontology = null;
+		
+		try {
+			ontology = ontologyManager.createOntology(ontologyIRI);
+			System.out.println("Created ontology: " + ontologyIRI);
+		}
+		catch(OWLOntologyAlreadyExistsException ooae) {
+			System.out.println("SimpleOWLAPI ERROR: ontology <" + ontologyIRI + "> already exists in workspace!");
+		}
+		catch(OWLOntologyDocumentAlreadyExistsException  oodaee) {
+			System.out.println("SimpleOWLAPI ERROR: ontology <" + ontologyIRI + "> already exists in workspace!");
+		}
+		
+		if (ontology != null) {
 			selectedOntology = ontology;
 			selectedOntologyIRI = ontologyIRI;
 			owlReasoner = null;
-			owlReasoner = new SimpleOWLReasoner(reasonerFactory, selectedOntology, parser, selectedReasoner);//SimpleOWLReasoner.getInstance(reasonerFactory, selectedOntology, parser, selectedReasoner);
+			owlReasoner = new SimpleOWLReasoner(reasonerFactory, selectedOntology, parser, selectedReasoner);
 		}
 
 		return ontology;
@@ -202,6 +225,7 @@ public class SimpleOWLAPIFactory
 	*/
 	public void setOntology(String iriStr)
 	{
+		System.out.println();
 		selectedOntology = ontologyManager.getOntology(IRI.create(iriStr));
 		if (selectedOntology != null) 
 		{
@@ -220,6 +244,7 @@ public class SimpleOWLAPIFactory
 	*/
 	public void setOntology(OWLOntology ontology)
 	{
+		System.out.println();
 		if (ontology != null) 
 		{
 			selectedOntology = ontology;
@@ -237,6 +262,7 @@ public class SimpleOWLAPIFactory
 	*/
 	public void getOntology()
 	{
+		System.out.println();
 		if (selectedOntology != null) {
 			System.out.println("Selected ontology is: " + selectedOntology.getOntologyID().getOntologyIRI().get().toString());
 		}
@@ -260,6 +286,9 @@ public class SimpleOWLAPIFactory
 	*/
 	public void getOntologies()
 	{
+		System.out.println();
+		System.out.println("List of ontologies in workspace:");
+		System.out.println("--------------------------------");
 		if (ontologyManager.getOntologies().size() > 0) {
 			int idx = 1;
 			for (OWLOntology o: ontologyManager.getOntologies()) {
@@ -429,22 +458,26 @@ public class SimpleOWLAPIFactory
 			return null;
 		}
 		else {
+			parser.setString(axiomStr);
+			OWLAxiom axiom = null;
 			try {
-				parser.setString(axiomStr);
-				OWLAxiom axiom = parser.getParser().parseAxiom();
+				axiom = parser.getParser().parseAxiom();
+			}
+			catch(OWLParserException ope) {
+				System.out.println("SimpleOWLAPI PARSER ERROR: " + ope.getMessage());
+			}
+
+			if (axiom != null) {
 				ontologyManager.addAxiom(selectedOntology, axiom);
 				if (fullIRIRendering)
 					System.out.println("OWLAxiom: " + axiom);
 				else
 					System.out.println("OWLAxiom: " + renderer.render(axiom));
-				return axiom;
 			}
-			catch (ParserException pe) {
-				System.out.println("SimpleOWLAPI PARSER ERROR: There is something wrong with your axiom expression. One reason could be that you did not create some entities (class, property or individual names) that are referenced in this axiom you are attempting to create.");
-				return null;
-			}
+			return axiom;
 		}
 	}
+
 
 	/** Creates an anonymous class expression and prints out the class expression to the console
 	 * @param classExpressionStr A string representation of the class expression in Manchester OWL syntax
@@ -458,11 +491,20 @@ public class SimpleOWLAPIFactory
 		}
 		else {
 			parser.setString(classExpressionStr);
-			OWLClassExpression clsEx = parser.getParser().parseClassExpression();
-			if (fullIRIRendering)
-				System.out.println("OWLClassExpression: " + clsEx);
-			else
-				System.out.println("OWLClassExpression: " + renderer.render(clsEx));
+			OWLClassExpression clsEx = null;
+			try {
+				clsEx = parser.getParser().parseClassExpression();
+			}
+			catch(OWLParserException ope) {
+				System.out.println("SimpleOWLAPI PARSER ERROR: " + ope.getMessage());
+			}
+			
+			if (clsEx != null) {
+				if (fullIRIRendering)
+					System.out.println("OWLClassExpression: " + clsEx);
+				else
+					System.out.println("OWLClassExpression: " + renderer.render(clsEx));
+			}
 			return clsEx;
 		}
 	}
@@ -733,10 +775,18 @@ public class SimpleOWLAPIFactory
 			return a;
 		}
 	}
+	
 
 	/** Prints a grouped list of the main logical entities in the ontology to console (classes, properties, individuals, TBox, ABox, RBox etc.)
 	*/
 	public void printOntology(){
+		System.out.println();
+		String ontIRI = selectedOntology.getOntologyID().getDefaultDocumentIRI().get().toString();
+		System.out.println("Summary of ontology: " + ontIRI);
+		for (int i = 0; i < ontIRI.length()+21;i++)
+			System.out.print("-");
+		System.out.println();
+		
 		Set<OWLEntity> signature = selectedOntology.getSignature();
 		Set<OWLAxiom> rbox = selectedOntology.getRBoxAxioms(Imports.EXCLUDED);
 		Set<OWLAxiom> tbox = selectedOntology.getTBoxAxioms(Imports.EXCLUDED);
@@ -834,7 +884,7 @@ public class SimpleOWLAPIFactory
 	public void printOntologyStats(){
 		System.out.println();
 		String ontIRI = selectedOntology.getOntologyID().getDefaultDocumentIRI().get().toString();
-		System.out.println("Stats for Ontology: " + ontIRI);
+		System.out.println("Stats for ontology: " + ontIRI);
 		for (int i = 0; i < ontIRI.length()+20;i++)
 			System.out.print("-");
 		System.out.println();
@@ -976,8 +1026,17 @@ public class SimpleOWLAPIFactory
 	*/
 	public void removeAxiom(String axiomStr) {
 		parser.setString(axiomStr);
-		OWLAxiom axiom = parser.getParser().parseAxiom();
-		ontologyManager.removeAxiom(selectedOntology, axiom);
+		OWLAxiom axiom = null;
+		
+		try {
+			axiom = parser.getParser().parseAxiom();
+		}
+		catch(OWLParserException ope) {
+			System.out.println("SimpleOWLAPI PARSER ERROR: " + ope.getMessage());
+		}
+		
+		if (axiom != null)
+			ontologyManager.removeAxiom(selectedOntology, axiom);
 	}
 
 	/** Removes axiom from the currently selected ontology
@@ -1006,18 +1065,29 @@ public class SimpleOWLAPIFactory
 	 * @throws org.semanticweb.owlapi.model.OWLOntologyCreationException if the filepath is invalid
 	*/
 	public OWLOntology loadFromFile(String filepath) throws OWLOntologyCreationException {
+		System.out.println();
 		File file = new File(filepath);
-		OWLOntology ontology = ontologyManager.loadOntologyFromOntologyDocument(file);
+		OWLOntology ontology = null;
 		
-		// add new ontology signature to parser vocabulary so we can use Manchester OWL strings to manipulate and query it
-		for (OWLEntity e: ontology.getSignature()) {
-			parser.addVocab(e);
+		try {
+			ontology = ontologyManager.loadOntologyFromOntologyDocument(file);
+			System.out.println("Loaded ontology: <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + "> into workspace.");
 		}
-		
-		selectedOntology = ontology;
-		selectedOntologyIRI = ontology.getOntologyID().getDefaultDocumentIRI().get();
-		owlReasoner = null;
-		owlReasoner = new SimpleOWLReasoner(reasonerFactory, selectedOntology, parser, selectedReasoner);
+		catch (OWLOntologyCreationException ooce) {
+			System.out.println("SimpleOWLAPI LOADING ERROR: either the ontology file " + filepath + " could not be found, it could not be parsed, or it already exists in your workspace.");
+		}
+
+		if (ontology != null) {
+			// add new ontology signature to parser vocabulary so we can use Manchester OWL strings to manipulate and query it
+			for (OWLEntity e: ontology.getSignature()) {
+				parser.addVocab(e);
+			}
+			
+			selectedOntology = ontology;
+			selectedOntologyIRI = ontology.getOntologyID().getDefaultDocumentIRI().get();
+			owlReasoner = null;
+			owlReasoner = new SimpleOWLReasoner(reasonerFactory, selectedOntology, parser, selectedReasoner);
+		}
 		return ontology;
 	}
 
@@ -1027,18 +1097,29 @@ public class SimpleOWLAPIFactory
 	 * @throws org.semanticweb.owlapi.model.OWLOntologyCreationException if the remote URL is invalid
 	*/
 	public OWLOntology loadFromURL(String url) throws OWLOntologyCreationException {
+		System.out.println();
 		IRI remoteOntologyIRI = IRI.create(url);
-		OWLOntology ontology = ontologyManager.loadOntology(remoteOntologyIRI);
+		OWLOntology ontology = null;
 		
-		// add new ontology signature to parser vocabulary so we can use Manchester OWL strings to manipulate and query it
-		for (OWLEntity e: ontology.getSignature()) {
-			parser.addVocab(e);
+		try {
+			ontology = ontologyManager.loadOntology(remoteOntologyIRI);
+			System.out.println("Loaded ontology: <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + "> into workspace.");
+		}
+		catch (OWLOntologyCreationException ooce) {
+			System.out.println("SimpleOWLAPI LOADING ERROR: either the ontology at URL " + url + " could not be found, it could not be parsed, or it already exists in your workspace.");
 		}
 		
-		selectedOntology = ontology;
-		selectedOntologyIRI = ontology.getOntologyID().getDefaultDocumentIRI().get();
-		owlReasoner = null;
-		owlReasoner = new SimpleOWLReasoner(reasonerFactory, selectedOntology, parser, selectedReasoner);
+		if (ontology != null) {
+			// add new ontology signature to parser vocabulary so we can use Manchester OWL strings to manipulate and query it
+			for (OWLEntity e: ontology.getSignature()) {
+				parser.addVocab(e);
+			}
+			
+			selectedOntology = ontology;
+			selectedOntologyIRI = ontology.getOntologyID().getDefaultDocumentIRI().get();
+			owlReasoner = null;
+			owlReasoner = new SimpleOWLReasoner(reasonerFactory, selectedOntology, parser, selectedReasoner);
+		}
 		return ontology;
 	}
 
@@ -1048,18 +1129,43 @@ public class SimpleOWLAPIFactory
 	 * @throws org.semanticweb.owlapi.model.OWLOntologyStorageException if there is a serialisation error when saving the ontology to disk
 	*/
 	public void saveOntology(String filepath) throws OWLOntologyStorageException, FileNotFoundException{
-		FileOutputStream fout=new FileOutputStream(filepath);    
-		ontologyManager.saveOntology(selectedOntology, new ManchesterSyntaxDocumentFormat(), fout);
+		System.out.println();
+		FileOutputStream fout= null;
+		try {
+			fout = new FileOutputStream(filepath);
+		}
+		catch (FileNotFoundException fnfe) {
+			System.out.println("SimpleOWLAPI SAVING ERROR: the save path for the ontology " + filepath + " is invalid.");
+		}
+		catch (SecurityException se) {
+			System.out.println("SimpleOWLAPI SAVING ERROR: you do not have write access to save the ontology to " + filepath + ".");
+		}
+		
+		if (fout != null) {
+			try {
+				ontologyManager.saveOntology(selectedOntology, new ManchesterSyntaxDocumentFormat(), fout);
+				System.out.println("Saved ontology: <" + selectedOntology.getOntologyID().getDefaultDocumentIRI().get().toString() + "> to " + filepath);
+			}
+			catch (OWLOntologyStorageException oose) {
+				System.out.println("SimpleOWLAPI SAVING ERROR: the ontology could not be saved.");
+			}
+			catch (UnknownOWLOntologyException uoe) {
+				System.out.println("SimpleOWLAPI SAVING ERROR: the ontology could not be saved.");
+			}
+		}
 	}
 	
 	/** Removes an ontology from the current context (simpleOWLAPIFactory instance)  
 	 * @param iriStr the IRI string of the ontology to remove 
 	*/
 	public void removeOntology(String iriStr){
+		System.out.println();
 		IRI ontIRI = IRI.create(iriStr);
 		
-		if (ontologyManager.contains(ontIRI))
+		if (ontologyManager.contains(ontIRI)) {
 			ontologyManager.removeOntology(ontologyManager.getOntology(ontIRI));
+			System.out.println("Removed ontology <" + ontIRI + "> from workspace.");
+		}
 		
 		if (ontologyManager.getOntologies().size() > 0) {
 			Iterator<OWLOntology> ontIter = ontologyManager.getOntologies().iterator();
@@ -1075,8 +1181,10 @@ public class SimpleOWLAPIFactory
 	 * @param ontology the OWLOntology object to remove 
 	*/
 	public void removeOntology(OWLOntology ontology){
+		System.out.println();
 		if (ontology != null && ontologyManager.contains(ontology)) {
 			ontologyManager.removeOntology(ontology);
+			System.out.println("Removed ontology <" + ontology.getOntologyID().getOntologyIRI().get().toString() + "> from workspace.");
 		}
 		
 		if (ontologyManager.getOntologies().size() > 0) {
@@ -1092,8 +1200,10 @@ public class SimpleOWLAPIFactory
 	/** Removes selected ontology from the current context (simpleOWLAPIFactory instance)  
 	*/
 	public void removeOntology(){
+		System.out.println();
 		if (selectedOntology != null && ontologyManager.contains(selectedOntology)) {
 			ontologyManager.removeOntology(selectedOntology);
+			System.out.println("Removed ontology <" + selectedOntologyIRI + "> from workspace.");
 		}
 		
 		if (ontologyManager.getOntologies().size() > 0) {
