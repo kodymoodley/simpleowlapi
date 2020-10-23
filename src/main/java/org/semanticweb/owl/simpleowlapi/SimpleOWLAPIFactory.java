@@ -464,7 +464,17 @@ public class SimpleOWLAPIFactory
 				axiom = parser.getParser().parseAxiom();
 			}
 			catch(OWLParserException ope) {
-				System.out.println("SimpleOWLAPI PARSER ERROR: " + ope.getMessage());
+				String [] tokens = ope.getMessage().split(" ");
+				
+				int idx = 0;
+				int badEntityIdx = 0;
+				for (String token : tokens) {
+					if (token.equals("Encountered"))
+						badEntityIdx = idx+1;
+					idx++;
+				}
+				
+				System.out.println("SimpleOWLAPI PARSER ERROR: the entity " + tokens[badEntityIdx] + " in its current position in the expression is not recognized by the parser! Either you have not created this entity or it should not appear in this position within the expression.");
 			}
 
 			if (axiom != null) {
@@ -496,7 +506,17 @@ public class SimpleOWLAPIFactory
 				clsEx = parser.getParser().parseClassExpression();
 			}
 			catch(OWLParserException ope) {
-				System.out.println("SimpleOWLAPI PARSER ERROR: " + ope.getMessage());
+				String [] tokens = ope.getMessage().split(" ");
+				
+				int idx = 0;
+				int badEntityIdx = 0;
+				for (String token : tokens) {
+					if (token.equals("Encountered"))
+						badEntityIdx = idx+1;
+					idx++;
+				}
+				
+				System.out.println("SimpleOWLAPI PARSER ERROR: the entity " + tokens[badEntityIdx] + " in its current position in the expression is not recognized by the parser! Either you have not created this entity or it should not appear in this position within the expression.");
 			}
 			
 			if (clsEx != null) {
