@@ -51,7 +51,7 @@ import org.semanticweb.owlapi.model.*;
 SimpleOWLAPIFactory s = SimpleOWLAPIFactory.getInstance(); // create a new SimpleOWLAPIFactory instance which allows the construction and manipulation of OWL ontologies (default OWL reasoner is JFACT)
 SimpleOWLAPIFactory s2 = SimpleOWLAPIFactory.getInstance(SelectedReasoner.PELLET); // create a new SimpleOWLAPIFactory instance with the specified reasoner e.g. PELLET set for use
 s.createOntology("http://com.kodymoodley/ontologies/2020/testontology#"); // create a new OWL ontology by specifying an IRI string and set it to the currently selected (active) ontology
-s.createClasses("Penguin Peacock Bird Robin FlyingOrganism Fish Wing");	// create multiple class names (each separated by a space) and add them to the currently selected ontology
+s.createClasses("Penguin Peacock Bird Robin FlyingOrganism Fish Wing Gender Person Female Male");	// create multiple class names (each separated by a space) and add them to the currently selected ontology
 s.createOProperties("hasPart isPartOf hasGender knows eats hunts"); // create multiple object properties (each separated by a space) and add them to the currently selected ontology
 s.createIndividuals("tweety woody nemo sharky sheila feather1"); // create multiple named individuals (each separated by a space) and add them to the currently selected ontology
 s.createDProperties("hasWeight name bornOn"); // create multiple data properties (each separated by a space) and add them to the currently selected ontology
@@ -65,6 +65,7 @@ s.setFullIRIRendering(true); // set whether to render OWL entities (classes, ind
 
 s.createAxiom("tweety Type: hasWeight value \"300.56\"^^xsd:double"); // create an OWL data property assertion axiom and add it to the currently selected ontology
 s.createAxiom("tweety Type: hasGender exactly 1 Gender"); // create an OWL class assertion axiom and add it to the currently selected ontology
+s.createAxiom("tweety Type: Penguin");
 s.createAxiom("woody Type: knows value nemo"); // create an OWL object property assertion axiom and add it to the currently selected ontology
 
 s.createAxiom("eats subPropertyOf: hunts"); // create OWL subPropertyOf axiom and add it to the currently selected ontology
@@ -73,6 +74,9 @@ s.createAxiom("knows Domain: Person"); // create object property domain axiom an
 s.createAxiom("knows Range: Person"); // create object property range axiom and add it to the currently selected ontology
 
 s.createAxiom("Penguin subClassOf eats some Fish"); // create OWL subClassOf axiom and add it to the currently selected ontology
+s.createAxiom("Penguin subClassOf Bird");
+s.createAxiom("Bird subClassOf FlyingOrganism");
+s.createAxiom("Penguin subClassOf not FlyingOrganism");
 s.createAxiom("Gender equivalentTo: Male or Female"); // create OWL equivalent classes axiom and add it to the currently selected ontology
 s.createAxiom("Male disjointWith: Female"); // create OWL equivalent classes axiom and add it to the currently selected ontology
 s.createAxiom("{tweety,woody} subClassOf Bird"); // create an OWL subClassOf axiom using nominals and add it to the currently selected ontology
