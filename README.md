@@ -49,8 +49,7 @@ For more information on how to use simpleOWLAPI, see the [Javadocs](https://kody
 import org.semanticweb.owl.simpleowlapi.*;
 import org.semanticweb.owlapi.model.*;
 
-SimpleOWLAPIFactory s = SimpleOWLAPIFactory.getInstance(); // create a new SimpleOWLAPIFactory instance which allows the construction and manipulation of OWL ontologies (default OWL reasoner is JFACT)
-SimpleOWLAPIFactory s2 = SimpleOWLAPIFactory.getInstance(SelectedReasoner.PELLET); // create a new SimpleOWLAPIFactory instance with the specified reasoner e.g. PELLET set for use
+SimpleOWLAPIFactory s = new SimpleOWLAPIFactory(); // create a new SimpleOWLAPIFactory instance which allows the construction and manipulation of OWL ontologies (default OWL reasoner is JFACT)
 s.createOntology("http://com.kodymoodley/ontologies/2020/testontology#"); // create a new OWL ontology by specifying an IRI string and set it to the currently selected (active) ontology
 s.createClasses("Penguin Peacock Bird Robin FlyingOrganism Fish Wing Gender Person Female Male");	// create multiple class names (each separated by a space) and add them to the currently selected ontology
 s.createOProperties("hasPart isPartOf hasGender knows eats hunts"); // create multiple object properties (each separated by a space) and add them to the currently selected ontology
@@ -107,7 +106,7 @@ s.removeAxiom("Penguin subClassOf eats some Fish"); // remove an axiom from the 
 ##### Examples: reasoning
 
 ```java
-SimpleOWLAPIFactory s = SimpleOWLAPIFactory.getInstance();
+SimpleOWLAPIFactory s = new SimpleOWLAPIFactory();
 
 ...
 
