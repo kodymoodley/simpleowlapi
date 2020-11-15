@@ -80,7 +80,7 @@ s.createAxiom("tweety Type: hasWeight value \"300.56\"^^xsd:double");
 s.createAxiom("tweety Type: hasGender exactly 1 Gender"); 
 s.createAxiom("tweety Type: Penguin");
 // create an OWL object property assertion axiom and add it to the currently selected ontology
-s.createAxiom("woody Type: knows value nemo"); 
+s.createObjectPropertyAssertion("woody knows nemo"); 
 
 // create OWL subPropertyOf axiom and add it to the currently selected ontology
 s.createAxiom("eats subPropertyOf: hunts"); 
