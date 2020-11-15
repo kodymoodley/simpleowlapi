@@ -1108,6 +1108,17 @@ public class SimpleOWLAPIFactory
 	/** Removes an object property from the parser vocabulary and currently selected ontology
 	 * @param opropname A string representation of the object property to remove  
 	*/	
+	public void removeObjectProperty(String opropname) {
+		if (selectedOntology != null) {
+			OWLObjectProperty r = dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + opropname));
+			OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(r, new HashSet<OWLAnnotation>());
+			ontologyManager.removeAxiom(selectedOntology, a);
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: there is no selected ontology to property from!");
+		}
+	}
+	
 	public void removeOProperty(String opropname) {
 		if (selectedOntology != null) {
 			OWLObjectProperty r = dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + opropname));
@@ -1119,9 +1130,22 @@ public class SimpleOWLAPIFactory
 		}
 	}
 	
+
+	
 	/** Removes a data property from the parser vocabulary and currently selected ontology
 	 * @param dpropname A string representation of the data property to remove  
 	*/	
+	public void removeDataProperty(String dpropname) {
+		if (selectedOntology != null) {	
+			OWLDataProperty r = dataFactory.getOWLDataProperty(IRI.create(selectedOntologyIRI.toString() + dpropname));
+			OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(r, new HashSet<OWLAnnotation>());
+			ontologyManager.removeAxiom(selectedOntology, a);	
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: there is no selected ontology to remove property from!");
+		}
+	}
+	
 	public void removeDProperty(String dpropname) {
 		if (selectedOntology != null) {	
 			OWLDataProperty r = dataFactory.getOWLDataProperty(IRI.create(selectedOntologyIRI.toString() + dpropname));
@@ -1137,6 +1161,23 @@ public class SimpleOWLAPIFactory
 	/** Removes multiple object properties from the parser vocabulary and currently selected ontology
 	 * @param opropnames A single space separated list of object properties to remove from the ontology e.g. "marriedTo hasTopping teachesCourse"  
 	*/	
+	public void removeObjectProperties(String opropnames)
+	{
+		if (selectedOntology == null) {
+			System.out.println("SimpleOWLAPI ERROR: There is no ontology to remove properties from!");
+		}
+		else {
+			String [] oprops = opropnames.split(" ");
+			if (oprops.length == 0){
+				System.out.println("SimpleOWLAPI PARSER ERROR: incorrect syntax for removing properties. String requires more than 1 token (property names) each separated by single spaces");
+			}
+			else {
+				for (String o: oprops)
+					removeOProperty(o);
+			}
+		}
+	}
+	
 	public void removeOProperties(String opropnames)
 	{
 		if (selectedOntology == null) {
@@ -1156,7 +1197,24 @@ public class SimpleOWLAPIFactory
 	
 	/** Removes multiple data properties from the parser vocabulary and currently selected ontology
 	 * @param dpropnames A single space separated list of data properties to remove from the ontology e.g. "hasHeight hasSalary hasConcentration"  
-	*/	
+	*/
+	public void removeDataProperties(String dpropnames)
+	{
+		if (selectedOntology == null) {
+			System.out.println("SimpleOWLAPI ERROR: There is no ontology to remove properties from!");
+		}
+		else {
+			String [] dprops = dpropnames.split(" ");
+			if (dprops.length == 0){
+				System.out.println("SimpleOWLAPI PARSER ERROR: incorrect syntax for removing properties. String requires more than 1 token (property names) each separated by single spaces");
+			}
+			else {
+				for (String d: dprops)
+					removeDProperty(d);
+			}
+		}
+	}
+	
 	public void removeDProperties(String dpropnames)
 	{
 		if (selectedOntology == null) {
