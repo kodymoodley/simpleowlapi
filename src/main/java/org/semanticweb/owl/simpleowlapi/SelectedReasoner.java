@@ -100,6 +100,10 @@ public class SelectedReasoner implements Serializable{
     /** returns a string representation of the OWL 2 Profile supported by the SelectedReasoner instance
      * @return The string representation of the OWL 2 Profile which the selected reasoner supports
     */
+	public String getOWLProfile() {
+        return profile;
+	}
+	
 	public String getProfile() {
         return profile;
 	}

@@ -127,6 +127,30 @@ public class SimpleOWLReasoner
     
     // Get all atomic subclasses for the given class expression (both inferred by the reasoner and asserted)
     
+    /** prints all atomic equivalent classes of a given class expression string to console output
+     * @param classEx a class expression string in Manchester OWL Syntax 
+    */
+    public void getEquivalentClasses(String classEx)
+    {
+        reasoner.flush();
+        try {
+        	System.out.println("All equivalent classes of " + classEx);
+    		for (int i = 0; i < classEx.length()+25;i++)
+    			System.out.print("-");
+            System.out.println();
+	        Node<OWLClass> subclasses = reasoner.getEquivalentClasses(parser.createClassExpression(classEx));
+	        for (OWLClass nc: subclasses){
+	        	if (!nc.isOWLNothing() && !nc.isOWLThing())
+	        		System.out.println(Parser.renderer.render(nc));
+	        }
+	        System.out.println();
+        }
+        catch (InconsistentOntologyException ioe) {
+    		System.out.println();
+        	System.out.println("SimpleOWLAPI REASONING ERROR: computing all equivalent classes of " + classEx + " is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
+        }
+    }
+    
     /** prints all atomic subclasses (both direct and indirect) of a given class expression string to console output
      * @param classEx a class expression string in Manchester OWL Syntax 
     */
@@ -189,9 +213,9 @@ public class SimpleOWLReasoner
     			System.out.print("-");
             System.out.println();
 	        Node<OWLClass> classes = reasoner.getUnsatisfiableClasses();
+	        System.out.println(classes.getSize());
 	        for (OWLClass c: classes){
-	            if (!c.isOWLNothing())
-	                System.out.println(Parser.renderer.render(c));
+	           System.out.println(Parser.renderer.render(c));
 	        }
 	        System.out.println();
         }
@@ -263,7 +287,7 @@ public class SimpleOWLReasoner
     /** for a given object property, print all object property assertions it is involved in, to console output
      * @param opropStr string representing an object property   
     */
-    public void getOPropertyAssertions(String opropStr){
+    public void getObjectPropertyAssertions(String opropStr){
         this.reasoner.flush();
         try {
         	System.out.println("Object Property Assertions for: " + opropStr);
@@ -287,9 +311,79 @@ public class SimpleOWLReasoner
         	System.out.println("SimpleOWLAPI REASONING ERROR: checking for entailed object property assertions is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
         }
     }
+    
+    public void getOPropertyAssertions(String opropStr){
+        this.reasoner.flush();
+
+        try {
+        	System.out.println("Object Property Assertions for: " + opropStr);
+    		for (int i = 0; i < opropStr.length()+32;i++)
+    			System.out.print("-");
+    		System.out.println();
+	        Set<OWLNamedIndividual> inds = ontology.getIndividualsInSignature(Imports.EXCLUDED);
+	        for (OWLNamedIndividual i :inds){
+	            NodeSet<OWLNamedIndividual> indP = this.reasoner.getObjectPropertyValues(i, dataFactory.getOWLObjectProperty(IRI.create(ontologyIRI.toString()+opropStr)));
+	            for (Node<OWLNamedIndividual> n: indP) {
+	                for (OWLNamedIndividual ai : n){
+	                    System.out.println(Parser.renderer.render(i) + "," + Parser.renderer.render(ai));
+	                }
+	            }        
+	        }
+	        if (inds.size() > 0)
+	        	System.out.println();
+        }
+        catch (InconsistentOntologyException ioe) {
+    		System.out.println();
+        	System.out.println("SimpleOWLAPI REASONING ERROR: checking for entailed object property assertions is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
+        }
+    }
+    
+    /** for a given class expression, print all its instances to console output
+     * @param clsStr a class expression string in Manchester OWL Syntax 
+    */
+    public void getInstances(String clsStr){
+    	OWLClassExpression cls = parser.createClassExpression(clsStr);
+        reasoner.flush();
+        try {
+        	System.out.println("Individuals of: " + clsStr);
+    		for (int i = 0; i < clsStr.length()+16;i++)
+    			System.out.print("-");
+    		System.out.println();
+    		NodeSet<OWLNamedIndividual> inds = reasoner.getInstances(cls, false);
+	        for (OWLNamedIndividual i :inds.getFlattened()){
+	        	System.out.println(Parser.renderer.render(i));        
+	        }
+	        
+	        if (inds.getFlattened().size() > 0)
+	        	System.out.println();
+        }
+        catch (InconsistentOntologyException ioe) {
+    		System.out.println();
+        	System.out.println("SimpleOWLAPI REASONING ERROR: checking for instances is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
+        }
+    }
 
     /** for each object property in the ontology, print all object property assertions they are involved in to console output   
     */
+    public void getAllObjectPropertyAssertions(){
+        this.reasoner.flush();
+        try {
+        	System.out.println("All Object Property Assertions in <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">:");
+    		for (int i = 0; i < ontology.getOntologyID().getDefaultDocumentIRI().get().toString().length()+37;i++)
+    			System.out.print("-");
+            System.out.println();
+	        for (OWLObjectProperty o : ontology.getObjectPropertiesInSignature(Imports.EXCLUDED)){
+	            getOPropertyAssertions(Parser.renderer.render(o));
+	            System.out.println();
+	        }
+	        System.out.println();
+        }
+        catch (InconsistentOntologyException ioe) {
+    		System.out.println();
+        	System.out.println("SimpleOWLAPI REASONING ERROR: checking for entailed object property assertions is not possible because <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">" + " is inconsistent!");
+        }
+    }
+    
     public void getAllOPropertyAssertions(){
         this.reasoner.flush();
         try {

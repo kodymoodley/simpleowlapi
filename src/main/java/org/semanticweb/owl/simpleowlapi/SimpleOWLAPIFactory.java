@@ -25,6 +25,7 @@ import org.semanticweb.owlapi.model.OWLIndividual;
 import org.semanticweb.owlapi.model.OWLIrreflexiveObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyAlreadyExistsException;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -328,13 +329,23 @@ public class SimpleOWLAPIFactory
 	/** Creates a new object property, adds this object property to the parser's vocabulary and the currently selected ontology, and prints out the object property to the console
 	 * @param opropname A string representation of an object property
 	*/	
+	public void createObjectProperty(String opropname)
+	{
+		if (selectedOntology == null) {
+			System.out.println("SimpleOWLAPI ERROR: There is no ontology to add properties to! First create an ontology.");
+		}
+		else {
+			createObjectProperty(opropname, 0, 0, 0);
+		}
+	}
+	
 	public void createOProperty(String opropname)
 	{
 		if (selectedOntology == null) {
 			System.out.println("SimpleOWLAPI ERROR: There is no ontology to add properties to! First create an ontology.");
 		}
 		else {
-			createOProperty(opropname, 0, 0, 0);
+			createObjectProperty(opropname, 0, 0, 0);
 		}
 	}
 
@@ -344,6 +355,71 @@ public class SimpleOWLAPIFactory
 	 * @param ref an integer value representing whether the object property should be made reflexive or not. 1 for reflexive and 0 for not making it reflexive, 2 for making it irreflexive
 	 * @param sym an integer value representing whether the object property should be made symmetric or not. 1 for symmetric and 0 for not making it symmetric, 2 for making it asymmetric
 	*/	
+	public void createObjectProperty(String opropname, int trans, int ref, int sym)
+	{
+		if (trans == 1){
+			OWLObjectProperty r = dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + opropname));
+			parser.addVocab(r);
+			OWLTransitiveObjectPropertyAxiom t = dataFactory.getOWLTransitiveObjectPropertyAxiom(r, new HashSet<OWLAnnotation>());
+			ontologyManager.addAxiom(selectedOntology, t);
+			if (fullIRIRendering)
+				System.out.println("ObjectProperty: " + r);
+			else
+				System.out.println("ObjectProperty: " + renderer.render(r));
+		}
+		if (ref == 1){
+			OWLObjectProperty r = dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + opropname));
+			parser.addVocab(r);
+			OWLReflexiveObjectPropertyAxiom t = dataFactory.getOWLReflexiveObjectPropertyAxiom(r, new HashSet<OWLAnnotation>());
+			ontologyManager.addAxiom(selectedOntology, t);
+			if (fullIRIRendering)
+				System.out.println("ObjectProperty: " + r);
+			else
+				System.out.println("ObjectProperty: " + renderer.render(r));
+		}
+		if (ref == 2){
+			OWLObjectProperty r = dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + opropname));
+			parser.addVocab(r);
+			OWLIrreflexiveObjectPropertyAxiom t = dataFactory.getOWLIrreflexiveObjectPropertyAxiom(r, new HashSet<OWLAnnotation>());
+			ontologyManager.addAxiom(selectedOntology, t);
+			if (fullIRIRendering)
+				System.out.println("ObjectProperty: " + r);
+			else
+				System.out.println("ObjectProperty: " + renderer.render(r));
+		}
+		if (sym == 1){
+			OWLObjectProperty r = dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + opropname));
+			parser.addVocab(r);
+			OWLSymmetricObjectPropertyAxiom t = dataFactory.getOWLSymmetricObjectPropertyAxiom(r, new HashSet<OWLAnnotation>());
+			ontologyManager.addAxiom(selectedOntology, t);
+			if (fullIRIRendering)
+				System.out.println("ObjectProperty: " + r);
+			else
+				System.out.println("ObjectProperty: " + renderer.render(r));
+		}
+		if (sym == 2){
+			OWLObjectProperty r = dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + opropname));
+			parser.addVocab(r);
+			OWLAsymmetricObjectPropertyAxiom t = dataFactory.getOWLAsymmetricObjectPropertyAxiom(r, new HashSet<OWLAnnotation>());
+			ontologyManager.addAxiom(selectedOntology, t);
+			if (fullIRIRendering)
+				System.out.println("ObjectProperty: " + r);
+			else
+				System.out.println("ObjectProperty: " + renderer.render(r));
+		}
+		if ((trans == 0) && (ref == 0) && (sym == 0)) {
+			OWLObjectProperty r = dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + opropname));
+			parser.addVocab(r);
+			OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(r, new HashSet<OWLAnnotation>());
+			OWLAxiom role_declaration = a.getAxiomWithoutAnnotations();
+			ontologyManager.addAxiom(selectedOntology, role_declaration);
+			if (fullIRIRendering)
+				System.out.println("ObjectProperty: " + r);
+			else
+				System.out.println("ObjectProperty: " + renderer.render(r));
+		}
+	}
+	
 	public void createOProperty(String opropname, int trans, int ref, int sym)
 	{
 		if (trans == 1){
@@ -412,6 +488,21 @@ public class SimpleOWLAPIFactory
 	/** Creates a new data property, adds this data property to the parser's vocabulary and the currently selected ontology, and prints out the data property to the console
 	 * @param dpropname A string representation of a data property  
 	*/	
+	public void createDataProperty(String dpropname) 
+	{
+		if (selectedOntology == null) {
+			System.out.println("SimpleOWLAPI ERROR: There is no ontology to add properties to! First create an ontology.");
+		}
+		else {
+			OWLDataProperty dprop = dataFactory.getOWLDataProperty(IRI.create(selectedOntologyIRI.toString() + dpropname));
+			parser.addVocab(dprop);
+			if (fullIRIRendering)
+				System.out.println("DataProperty: " + dprop);
+			else
+				System.out.println("DataProperty: " + renderer.render(dprop));
+		}
+	}
+	
 	public void createDProperty(String dpropname) 
 	{
 		if (selectedOntology == null) {
@@ -465,6 +556,7 @@ public class SimpleOWLAPIFactory
 				axiom = parser.getParser().parseAxiom();
 			}
 			catch(OWLParserException ope) {
+				ope.printStackTrace();
 				String [] tokens = ope.getMessage().split(" ");
 				
 				int idx = 0;
@@ -553,6 +645,23 @@ public class SimpleOWLAPIFactory
 	/** Creates multiple object properties, adds them to the parser vocabulary and the currently selected ontology
 	 * @param opropsstr A single space separated list of object properties
 	*/	
+	public void createObjectProperties(String opropsstr)
+	{
+		if (selectedOntology == null) {
+			System.out.println("SimpleOWLAPI ERROR: There is no ontology to add properties to! First create an ontology.");
+		}
+		else {
+			String [] oprops = opropsstr.split(" ");
+			if (oprops.length == 0){
+				System.out.println("SimpleOWLAPI PARSER ERROR: incorrect syntax for creating object property names. String requires more than 1 token (object property names) each separated by single spaces");
+			}
+			else {
+				for (String o: oprops)
+					createObjectProperty(o);
+			}
+		}
+	}
+	
 	public void createOProperties(String opropsstr)
 	{
 		if (selectedOntology == null) {
@@ -565,7 +674,7 @@ public class SimpleOWLAPIFactory
 			}
 			else {
 				for (String o: oprops)
-					createOProperty(o);
+					createObjectProperty(o);
 			}
 		}
 	}
@@ -593,6 +702,23 @@ public class SimpleOWLAPIFactory
 	/** Creates multiple data properties, adds them to the parser vocabulary and the currently selected ontology
 	 * @param dpropsstr A single space separated list of data properties
 	*/	
+	public void createDataProperties(String dpropsstr)
+	{
+		if (selectedOntology == null) {
+			System.out.println("SimpleOWLAPI ERROR: There is no ontology to add properties to! First create an ontology.");
+		}
+		else {
+			String [] dprops = dpropsstr.split(" ");
+			if (dprops.length == 0){
+				System.out.println("SimpleOWLAPI PARSER ERROR: incorrect syntax for creating data property names. String requires more than 1 token (data property names) each separated by single spaces");
+			}
+			else {
+				for (String d: dprops)
+					createDataProperty(d);
+			}
+		}
+	}
+	
 	public void createDProperties(String dpropsstr)
 	{
 		if (selectedOntology == null) {
@@ -605,10 +731,12 @@ public class SimpleOWLAPIFactory
 			}
 			else {
 				for (String d: dprops)
-					createDProperty(d);
+					createDataProperty(d);
 			}
 		}
 	}
+	
+	
 
 	/** Makes an existing object property in the ontology transitive
 	 * @param opropname A string representation of an object property
@@ -730,24 +858,42 @@ public class SimpleOWLAPIFactory
 		}
 	}
 
-	//    // Create role assertion axiom
-	//    public OWLAxiom createOPropertyAssertion(String axiomStr)
-	//    {
-	//        String [] parts = axiomStr.split(" ");
-	//        if (parts.length != 3){
-	//            System.out.println("Parser error: incorrect syntax for role assertion. requires exactly three tokens separated by single spaces");
-	//            return null;
-	//        }
-	//        else{
-	//            OWLObjectPropertyAssertionAxiom a = dataFactory.getOWLObjectPropertyAssertionAxiom(dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + parts[1])), dataFactory.getOWLNamedIndividual(IRI.create(selectedOntologyIRI.toString() + parts[0])), dataFactory.getOWLNamedIndividual(IRI.create(selectedOntologyIRI.toString() + parts[2])));
-	//            ontologyManager.addAxiom(selectedOntology, a);
-	//            if (fullIRIRendering)
-	//                System.out.println("ObjectPropertyAssertion: " + a);
-	//            else
-	//                System.out.println("ObjectPropertyAssertion: " + renderer.render(a));
-	//            return a;
-	//        }
-	//    }
+	    // Create role assertion axiom
+	    public OWLAxiom createObjectPropertyAssertion(String axiomStr)
+	    {
+	        String [] parts = axiomStr.split(" ");
+	        if (parts.length != 3){
+	            System.out.println("Parser error: incorrect syntax for role assertion. requires exactly three tokens separated by single spaces");
+	            return null;
+	        }
+	        else{
+	            OWLObjectPropertyAssertionAxiom a = dataFactory.getOWLObjectPropertyAssertionAxiom(dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + parts[1])), dataFactory.getOWLNamedIndividual(IRI.create(selectedOntologyIRI.toString() + parts[0])), dataFactory.getOWLNamedIndividual(IRI.create(selectedOntologyIRI.toString() + parts[2])));
+	            ontologyManager.addAxiom(selectedOntology, a);
+	            if (fullIRIRendering)
+	                System.out.println("ObjectPropertyAssertion: " + a);
+	            else
+	                System.out.println("ObjectPropertyAssertion: " + renderer.render(a));
+	            return a;
+	        }
+	    }
+	    
+	    public OWLAxiom createOPropertyAssertion(String axiomStr)
+	    {
+	        String [] parts = axiomStr.split(" ");
+	        if (parts.length != 3){
+	            System.out.println("Parser error: incorrect syntax for role assertion. requires exactly three tokens separated by single spaces");
+	            return null;
+	        }
+	        else{
+	            OWLObjectPropertyAssertionAxiom a = dataFactory.getOWLObjectPropertyAssertionAxiom(dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + parts[1])), dataFactory.getOWLNamedIndividual(IRI.create(selectedOntologyIRI.toString() + parts[0])), dataFactory.getOWLNamedIndividual(IRI.create(selectedOntologyIRI.toString() + parts[2])));
+	            ontologyManager.addAxiom(selectedOntology, a);
+	            if (fullIRIRendering)
+	                System.out.println("ObjectPropertyAssertion: " + a);
+	            else
+	                System.out.println("ObjectPropertyAssertion: " + renderer.render(a));
+	            return a;
+	        }
+	    }
 
 	/** Makes all the individual names in the ontology refer to different individuals (simulate the unique name assumption)
 	 * @return An OWLAxiom which enforces that all individual names in the ontology refer to different individuals (simulating the unique name assumption)
@@ -929,9 +1075,14 @@ public class SimpleOWLAPIFactory
 	 * @param classname A string representation of the class name to remove  
 	*/	
 	public void removeClass(String classname) {
-		OWLClass c = dataFactory.getOWLClass(IRI.create(selectedOntologyIRI.toString() + classname));
-		OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(c, new HashSet<OWLAnnotation>());
-		ontologyManager.removeAxiom(selectedOntology, a);
+		if (selectedOntology != null) {
+			OWLClass c = dataFactory.getOWLClass(IRI.create(selectedOntologyIRI.toString() + classname));
+			OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(c, new HashSet<OWLAnnotation>());
+			ontologyManager.removeAxiom(selectedOntology, a);
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: There is no ontology to remove classes from!");
+		}
 	}
 	
 	/** Removes multiple class names from the parser vocabulary and currently selected ontology
@@ -958,18 +1109,28 @@ public class SimpleOWLAPIFactory
 	 * @param opropname A string representation of the object property to remove  
 	*/	
 	public void removeOProperty(String opropname) {
-		OWLObjectProperty r = dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + opropname));
-		OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(r, new HashSet<OWLAnnotation>());
-		ontologyManager.removeAxiom(selectedOntology, a);
+		if (selectedOntology != null) {
+			OWLObjectProperty r = dataFactory.getOWLObjectProperty(IRI.create(selectedOntologyIRI.toString() + opropname));
+			OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(r, new HashSet<OWLAnnotation>());
+			ontologyManager.removeAxiom(selectedOntology, a);
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: there is no selected ontology to property from!");
+		}
 	}
 	
 	/** Removes a data property from the parser vocabulary and currently selected ontology
 	 * @param dpropname A string representation of the data property to remove  
 	*/	
 	public void removeDProperty(String dpropname) {
-		OWLDataProperty r = dataFactory.getOWLDataProperty(IRI.create(selectedOntologyIRI.toString() + dpropname));
-		OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(r, new HashSet<OWLAnnotation>());
-		ontologyManager.removeAxiom(selectedOntology, a);
+		if (selectedOntology != null) {	
+			OWLDataProperty r = dataFactory.getOWLDataProperty(IRI.create(selectedOntologyIRI.toString() + dpropname));
+			OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(r, new HashSet<OWLAnnotation>());
+			ontologyManager.removeAxiom(selectedOntology, a);	
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: there is no selected ontology to remove property from!");
+		}
 	}
 	
 	
@@ -1017,9 +1178,15 @@ public class SimpleOWLAPIFactory
 	 * @param individualname A string representation of the object property to remove  
 	*/	
 	public void removeIndividual(String individualname) {
-		OWLNamedIndividual i = dataFactory.getOWLNamedIndividual(IRI.create(selectedOntologyIRI.toString() + individualname));
-		OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(i, new HashSet<OWLAnnotation>());
-		ontologyManager.removeAxiom(selectedOntology, a);
+		if (selectedOntology == null) {
+			System.out.println("SimpleOWLAPI ERROR: There is no ontology to remove individuals from!");
+			OWLNamedIndividual i = dataFactory.getOWLNamedIndividual(IRI.create(selectedOntologyIRI.toString() + individualname));
+			OWLDeclarationAxiomImpl a = new OWLDeclarationAxiomImpl(i, new HashSet<OWLAnnotation>());
+			ontologyManager.removeAxiom(selectedOntology, a);
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: There is no ontology to remove individuals from!");
+		}
 	}
 	
 	/** Removes multiple individual names from the parser vocabulary and currently selected ontology
@@ -1064,20 +1231,37 @@ public class SimpleOWLAPIFactory
 	 * @param a an OWLAxiom object reference for the axiom to remove  
 	*/
 	public void removeAxiom(OWLAxiom a) {
-		ontologyManager.removeAxiom(selectedOntology, a);
+		if (selectedOntology != null) {
+			ontologyManager.removeAxiom(selectedOntology, a);
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: there is no selected ontology to remove axiom from!");
+		}
 	}
 	
 	/** Removes a set of axioms from the currently selected ontology
 	 * @param a a HashSet of OWLAxiom objects to remove from the ontology  
 	*/
 	public void removeAxioms(Set<OWLAxiom> a) {
-		ontologyManager.removeAxioms(selectedOntology, a);
+		if (selectedOntology != null) {
+			ontologyManager.removeAxioms(selectedOntology, a);
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: there is no selected ontology to remove axioms from!");
+		}
 	}
 
 	/** Removes all axioms (logical and otherwise) from the ontology  
 	*/
 	public void resetOntology(){
-		ontologyManager.removeAxioms(selectedOntology, selectedOntology.getAxioms());
+		if (selectedOntology != null){
+			System.out.println(selectedOntology.getOntologyID().getOntologyIRI().get().toString());
+			ontologyManager.removeAxioms(selectedOntology, selectedOntology.getAxioms());
+			selectedOntology = null;
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: no ontologies to reset in workspace!");
+		}
 	}
 
 	/** Loads an OWL ontology from local file into the SimpleOWLAPIFactory instance. This ontology becomes the currently selected ontology.
@@ -1190,6 +1374,9 @@ public class SimpleOWLAPIFactory
 			ontologyManager.removeOntology(ontologyManager.getOntology(ontIRI));
 			System.out.println("Removed ontology <" + ontIRI + "> from workspace.");
 		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: ontology <" + iriStr + "> cannot be removed because it does not exist in workspace!");
+		}
 		
 		if (ontologyManager.getOntologies().size() > 0) {
 			Iterator<OWLOntology> ontIter = ontologyManager.getOntologies().iterator();
@@ -1198,6 +1385,9 @@ public class SimpleOWLAPIFactory
 				if (currentOnt.getOntologyID().getDefaultDocumentIRI().isPresent())
 					selectedOntology = currentOnt;
 			}
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: ontology <" + iriStr + "> cannot be removed because it does not exist in workspace - (there are no ontologies in this workspace)!");
 		}
 	}
 	
@@ -1210,6 +1400,9 @@ public class SimpleOWLAPIFactory
 			ontologyManager.removeOntology(ontology);
 			System.out.println("Removed ontology <" + ontology.getOntologyID().getOntologyIRI().get().toString() + "> from workspace.");
 		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: ontology <" + ontology.getOntologyID().getOntologyIRI().get().toString() + "> cannot be removed because it does not exist in workspace!");
+		}
 		
 		if (ontologyManager.getOntologies().size() > 0) {
 			Iterator<OWLOntology> ontIter = ontologyManager.getOntologies().iterator();
@@ -1218,6 +1411,9 @@ public class SimpleOWLAPIFactory
 				if (currentOnt.getOntologyID().getDefaultDocumentIRI().isPresent())
 					selectedOntology = currentOnt;
 			}
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: ontology <" + ontology.getOntologyID().getOntologyIRI().get().toString() + "> cannot be removed because it does not exist in workspace - (there are no ontologies in this workspace)!");
 		}
 	}
 	
@@ -1229,6 +1425,9 @@ public class SimpleOWLAPIFactory
 			ontologyManager.removeOntology(selectedOntology);
 			System.out.println("Removed ontology <" + selectedOntologyIRI + "> from workspace.");
 		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: there is no ontology currently selected - cannot remove one!");
+		}
 		
 		if (ontologyManager.getOntologies().size() > 0) {
 			Iterator<OWLOntology> ontIter = ontologyManager.getOntologies().iterator();
@@ -1237,6 +1436,9 @@ public class SimpleOWLAPIFactory
 				if (currentOnt.getOntologyID().getDefaultDocumentIRI().isPresent())
 					selectedOntology = currentOnt;
 			}
+		}
+		else {
+			System.out.println("SimpleOWLAPI ERROR: there is no ontology to remove in the current workspace!");
 		}
 	}
 }
