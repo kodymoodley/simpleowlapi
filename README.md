@@ -56,11 +56,11 @@ s.createOntology("http://com.kodymoodley/ontologies/2020/testontology#");
 // create multiple class names (each separated by a space) and add them to the currently selected ontology
 s.createClasses("Penguin Peacock Bird Robin FlyingOrganism Fish Wing Gender Person Female Male");
 // create multiple object properties (each separated by a space) and add them to the currently selected ontology
-s.createOProperties("hasPart isPartOf hasGender knows eats hunts");
+s.createObjectProperties("hasPart isPartOf hasGender knows eats hunts");
 // create multiple named individuals (each separated by a space) and add them to the currently selected ontology
 s.createIndividuals("tweety woody nemo sharky sheila feather1");
 // create multiple data properties (each separated by a space) and add them to the currently selected ontology
-s.createDProperties("hasWeight name bornOn"); 
+s.createDataProperties("hasWeight name bornOn"); 
 
 // make an object property transitive
 s.makeTransitive("eats"); 
@@ -131,9 +131,9 @@ s.resetOntology();
 // remove multiple class names from currently selected ontology
 s.removeClasses("Bird Penguin"); 
 // remove multiple object properties from currently selected ontology
-s.removeOProperties("knows hasPart"); 
+s.removeObjectProperties("knows hasPart"); 
 // remove multiple data properties from currently selected ontology
-s.removeDProperties("hasWeight name"); 
+s.removeDataProperties("hasWeight name"); 
 // remove multiple individual names from currently selected ontology
 s.removeIndividuals("tweety woody"); 
 // remove an axiom from the currently selected ontology
@@ -170,16 +170,20 @@ s.owlReasoner.explainEntailment("Robin subClassOf FlyingOrganism");
 s.owlReasoner.getSuperClasses("Robin");	
 // computes and prints to console all sub classes (indirect) for the given class expression
 s.owlReasoner.getSubClasses("FlyingOrganism"); 
+// computes and prints to console all atomic classes equivalent to the given class expression
+s.owlReasoner.getEquivalentClasses("Robin and not FlyingOrganism);
 
 // computes and prints to console all class names for which the given individual is an instance
 s.owlReasoner.getTypes("tweety"); 
 // for each individual name in the selected ontology, computes and prints to console all class names such that this individual is an instance of the class name
 s.owlReasoner.getAllTypes(); 
+// computes and prints to console all instances of the given class expression
+s.owlReasoner.getInstances("Robin and not FlyingOrganism); 
 
 // given an object property name R, prints to console all individual name pairs (a,b) such that R(a, b) is an object property assertion entailed by the selected ontology
-s.owlReasoner.getOPropertyAssertions("knows"); 
+s.owlReasoner.getObjectPropertyAssertions("knows"); 
 // for each object property R in the ontology, prints to console all individual name pairs (a,b) such that R(a, b) is an object property assertion entailed by the active ontology
-s.owlReasoner.getAllOPropertyAssertions(); 
+s.owlReasoner.getAllObjectPropertyAssertions(); 
 
 // prints to console the name of the OWL reasoner which is currently being used by the simpleOWLAPIFactory instance
 s.owlReasoner.getName(); 
