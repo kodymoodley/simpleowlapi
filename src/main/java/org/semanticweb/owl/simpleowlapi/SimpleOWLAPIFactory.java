@@ -581,12 +581,20 @@ public class SimpleOWLAPIFactory
 		}
 	}
 
-
+	/** Changes the namespace of current context. Future entities created after executing this method will use this namespace
+	 * @param iriStr A string representation of the desired namespace IRI to change to
+	*/	
+	public void setNamespace(String iriStr) {
+		System.out.println();
+		selectedOntologyIRI = IRI.create(iriStr);
+		System.out.println("Changed the namespace for future entities to: " + selectedOntologyIRI);
+	}
+	
 	/** Creates an anonymous class expression and prints out the class expression to the console
 	 * @param classExpressionStr A string representation of the class expression in Manchester OWL syntax
 	 * @return An OWLClassExpression object representing the class in the input string 
 	*/	
-	public OWLClassExpression createClassExpression(String classExpressionStr)
+ 	public OWLClassExpression createClassExpression(String classExpressionStr)
 	{
 		if (selectedOntology == null) {
 			System.out.println("SimpleOWLAPI ERROR: There is no ontology to add classes to! First create an ontology.");
@@ -980,8 +988,10 @@ public class SimpleOWLAPIFactory
 		System.out.println("Classes:");
 		System.out.println("--------");
 
+		int cls_idx = 1;
 		for (OWLEntity c: clses){
-			System.out.println(renderer.render(c));
+			System.out.println(cls_idx + ". " + renderer.render(c));
+			cls_idx++;
 		}
 
 		System.out.println();
@@ -989,8 +999,10 @@ public class SimpleOWLAPIFactory
 		System.out.println("Object properties:");
 		System.out.println("------------------");
 
+		int op_idx = 1;
 		for (OWLEntity r: oprops){
-			System.out.println(renderer.render(r));
+			System.out.println(op_idx + ". " + renderer.render(r));
+			op_idx++;
 		}
 
 		System.out.println();
@@ -998,8 +1010,10 @@ public class SimpleOWLAPIFactory
 		System.out.println("Data properties:");
 		System.out.println("----------------");
 
+		int dp_idx = 1;
 		for (OWLEntity r: dprops){
-			System.out.println(renderer.render(r));
+			System.out.println(dp_idx + ". " + renderer.render(r));
+			dp_idx++;
 		}
 
 		System.out.println();
@@ -1007,8 +1021,10 @@ public class SimpleOWLAPIFactory
 		System.out.println("Individuals:");
 		System.out.println("------------");
 
+		int i_idx = 1;
 		for (OWLEntity i: inds){
-			System.out.println(renderer.render(i));
+			System.out.println(i_idx + ". " + renderer.render(i));
+			i_idx++;
 		}
 
 		System.out.println();
@@ -1016,24 +1032,34 @@ public class SimpleOWLAPIFactory
 		System.out.println("TBox:");
 		System.out.println("-----");
 
-		for (OWLAxiom a : tbox)
-			System.out.println(renderer.render(a));
+		int tbox_idx = 1;
+		for (OWLAxiom a : tbox) {
+			System.out.println(tbox_idx + ". " + renderer.render(a));
+			tbox_idx++;
+		}
+			
 
 		System.out.println();
 
 		System.out.println("ABox:");
 		System.out.println("-----");
 
-		for (OWLAxiom a : abox)
-			System.out.println(renderer.render(a));    
+		int abox_idx = 1;
+		for (OWLAxiom a : abox) {
+			System.out.println(abox_idx + ". " + renderer.render(a));
+			abox_idx++;
+		}
 
 		System.out.println();
 
 		System.out.println("RBox:");
 		System.out.println("-----");
 
-		for (OWLAxiom a : rbox)
-			System.out.println(renderer.render(a)); 
+		int rbox_idx = 1;
+		for (OWLAxiom a : rbox) {
+			System.out.println(rbox_idx + ". " + renderer.render(a));
+			rbox_idx++;
+		}
 	}
 
 	/** Prints an OWLAxiom object to console output
@@ -1401,16 +1427,16 @@ public class SimpleOWLAPIFactory
 			fout = new FileOutputStream(filepath);
 		}
 		catch (FileNotFoundException fnfe) {
-			System.out.println("SimpleOWLAPI SAVING ERROR: the save path for the ontology " + filepath + " is invalid.");
+			System.out.println("SimpleOWLAPI SAVING ERROR: the save path for the ontology '" + filepath + "' is invalid.");
 		}
 		catch (SecurityException se) {
-			System.out.println("SimpleOWLAPI SAVING ERROR: you do not have write access to save the ontology to " + filepath + ".");
+			System.out.println("SimpleOWLAPI SAVING ERROR: you do not have write access to save the ontology to '" + filepath + "'.");
 		}
 		
 		if (fout != null) {
 			try {
 				ontologyManager.saveOntology(selectedOntology, new ManchesterSyntaxDocumentFormat(), fout);
-				System.out.println("Saved ontology: <" + selectedOntology.getOntologyID().getDefaultDocumentIRI().get().toString() + "> to " + filepath);
+				System.out.println("Saved ontology: <" + selectedOntology.getOntologyID().getDefaultDocumentIRI().get().toString() + "> to '" + filepath + "'");
 			}
 			catch (OWLOntologyStorageException oose) {
 				System.out.println("SimpleOWLAPI SAVING ERROR: the ontology could not be saved.");

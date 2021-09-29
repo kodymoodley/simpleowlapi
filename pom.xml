@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.sourceforge.simpleowlapi</groupId>
 	<artifactId>simpleowlapi-lib</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.1</version>
 	<name>simpleOWLAPI wrapper for the OWLAPI</name>
 	<description>A light-weight wrapper for the OWLAPI enabling rapid and concise development of OWL ontologies using Manchester OWL Syntax.</description>
 	<url>https://simpleowlapi.sourceforge.io/</url>
@@ -125,6 +125,9 @@
     	<plugin>
       	<groupId>org.apache.maven.plugins</groupId>
       	<artifactId>maven-javadoc-plugin</artifactId>
+      	<configuration>
+        	<source>8</source>
+    		</configuration>
       	<version>2.9.1</version>
       	<executions>
         	<execution>
@@ -151,4 +154,8 @@
     	</plugin>
 		</plugins>
 	</build>
+	<properties> 
+  	<maven.compiler.source>1.8</maven.compiler.source>
+  	<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
 </project>

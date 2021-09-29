@@ -132,6 +132,7 @@ public class SimpleOWLReasoner
     */
     public void getEquivalentClasses(String classEx)
     {
+    	System.out.println();
         reasoner.flush();
         try {
         	System.out.println("All equivalent classes of " + classEx);
@@ -139,9 +140,12 @@ public class SimpleOWLReasoner
     			System.out.print("-");
             System.out.println();
 	        Node<OWLClass> subclasses = reasoner.getEquivalentClasses(parser.createClassExpression(classEx));
+	        int idx = 1;
 	        for (OWLClass nc: subclasses){
-	        	if (!nc.isOWLNothing() && !nc.isOWLThing())
-	        		System.out.println(Parser.renderer.render(nc));
+	        	if (!nc.isOWLNothing() && !nc.isOWLThing()) {
+	        		System.out.println(idx + ". " + Parser.renderer.render(nc));
+	        		idx++;
+	        	}
 	        }
 	        System.out.println();
         }
@@ -156,17 +160,21 @@ public class SimpleOWLReasoner
     */
     public void getSubClasses(String classEx)
     {
+    	System.out.println();
         reasoner.flush();
         try {
-        	System.out.println("All subclasses of " + classEx);
+        	System.out.println("All subclasses of '" + classEx + "'");
     		for (int i = 0; i < classEx.length()+18;i++)
     			System.out.print("-");
             System.out.println();
 	        NodeSet<OWLClass> subclasses = reasoner.getSubClasses(parser.createClassExpression(classEx), false);
+	        int idx = 1;
 	        for (Node<OWLClass> nc: subclasses){
 	            for (OWLClass c: nc){
-	                if (!c.isOWLNothing() && !c.isOWLThing())
-	                    System.out.println(Parser.renderer.render(c));
+	                if (!c.isOWLNothing() && !c.isOWLThing()) {
+	                    System.out.println(idx + ". " + Parser.renderer.render(c));
+	                    idx++;
+	                }
 	            }
 	        }
 	        System.out.println();
@@ -182,17 +190,21 @@ public class SimpleOWLReasoner
     */
     public void getSuperClasses(String classEx)
     {
+    	System.out.println();
         reasoner.flush();
         try {
-        	System.out.println("All superclasses of " + classEx);
+        	System.out.println("All superclasses of '" + classEx + "'");
     		for (int i = 0; i < classEx.length()+20;i++)
     			System.out.print("-");
             System.out.println();
 	        NodeSet<OWLClass> supclasses = reasoner.getSuperClasses(parser.createClassExpression(classEx), false);
+	        int idx = 1;
 	        for (Node<OWLClass> nc: supclasses){
 	            for (OWLClass c: nc){
-	                if (!c.isOWLNothing() && !c.isOWLThing())
-	                    System.out.println(Parser.renderer.render(c));
+	                if (!c.isOWLNothing() && !c.isOWLThing()) {
+	                    System.out.println(idx + ". " + Parser.renderer.render(c));
+	                    idx++;
+	                }
 	            }
 	        }
 	        System.out.println();
@@ -206,6 +218,7 @@ public class SimpleOWLReasoner
     /** prints all unsatisfiable class names in the ontology associated with this SimpleOWLReasoner instance to console output
     */
     public void getUnsatisfiableClasses(){
+    	System.out.println();
         reasoner.flush();
         try {
         	System.out.println("All unsatisfiable classes in <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">:");
@@ -213,9 +226,13 @@ public class SimpleOWLReasoner
     			System.out.print("-");
             System.out.println();
 	        Node<OWLClass> classes = reasoner.getUnsatisfiableClasses();
-	        System.out.println(classes.getSize());
+	        //System.out.println("classes.getSize());
+	        int idx = 1;
 	        for (OWLClass c: classes){
-	           System.out.println(Parser.renderer.render(c));
+	        	if (!c.isOWLNothing()) {
+	        		System.out.println(idx + ". " + Parser.renderer.render(c));
+	        		idx++;
+	        	}
 	        }
 	        System.out.println();
         }
@@ -240,17 +257,21 @@ public class SimpleOWLReasoner
      * @param ind string representation of an individual name in the ontology 
     */
     public void getTypes(String ind){
+    	System.out.println();
         this.reasoner.flush();
         try {
-        	System.out.println("Types for individual: " + ind);
+        	System.out.println("Types for individual: '" + ind + "'");
     		for (int i = 0; i < ind.length()+22;i++)
     			System.out.print("-");
     		System.out.println();
 	        NodeSet<OWLClass> typesC = this.reasoner.getTypes(dataFactory.getOWLNamedIndividual(IRI.create(ontologyIRI.toString()+ind)), false);
+	        int idx = 1;
 	        for (Node<OWLClass> c: typesC){
 	            for (OWLClass c2: c){
-	                if (!c2.isOWLThing())
-	                    System.out.println(Parser.renderer.render(c2));
+	                if (!c2.isOWLThing()) {
+	                    System.out.println(idx + ". " + Parser.renderer.render(c2));
+	                    idx++;
+	                }
 	            }
 	        }
 	        System.out.println();
@@ -288,6 +309,7 @@ public class SimpleOWLReasoner
      * @param opropStr string representing an object property   
     */
     public void getObjectPropertyAssertions(String opropStr){
+    	System.out.println();
         this.reasoner.flush();
         try {
         	System.out.println("Object Property Assertions for: " + opropStr);
@@ -295,11 +317,13 @@ public class SimpleOWLReasoner
     			System.out.print("-");
     		System.out.println();
 	        Set<OWLNamedIndividual> inds = ontology.getIndividualsInSignature(Imports.EXCLUDED);
+	        int idx = 1;
 	        for (OWLNamedIndividual i :inds){
 	            NodeSet<OWLNamedIndividual> indP = this.reasoner.getObjectPropertyValues(i, dataFactory.getOWLObjectProperty(IRI.create(ontologyIRI.toString()+opropStr)));
 	            for (Node<OWLNamedIndividual> n: indP) {
 	                for (OWLNamedIndividual ai : n){
-	                    System.out.println(Parser.renderer.render(i) + "," + Parser.renderer.render(ai));
+	                    System.out.println(idx + ". " + Parser.renderer.render(i) + "," + Parser.renderer.render(ai));
+	                    idx++;
 	                }
 	            }        
 	        }
@@ -342,16 +366,19 @@ public class SimpleOWLReasoner
      * @param clsStr a class expression string in Manchester OWL Syntax 
     */
     public void getInstances(String clsStr){
+    	System.out.println();
     	OWLClassExpression cls = parser.createClassExpression(clsStr);
         reasoner.flush();
         try {
-        	System.out.println("Individuals of: " + clsStr);
+        	System.out.println("Individuals of: '" + clsStr + "'");
     		for (int i = 0; i < clsStr.length()+16;i++)
     			System.out.print("-");
     		System.out.println();
     		NodeSet<OWLNamedIndividual> inds = reasoner.getInstances(cls, false);
+    		int idx = 1;
 	        for (OWLNamedIndividual i :inds.getFlattened()){
-	        	System.out.println(Parser.renderer.render(i));        
+	        	System.out.println(idx + ". " + Parser.renderer.render(i));
+	        	idx++;
 	        }
 	        
 	        if (inds.getFlattened().size() > 0)
@@ -425,9 +452,9 @@ public class SimpleOWLReasoner
         this.reasoner.flush();
         try {
 	        if (this.reasoner.isEntailed(axiom))
-	        	System.out.println("Yes - Axiom: " + axiomStr + " is entailed by <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">!");
+	        	System.out.println("Yes - Axiom: '" + axiomStr + "' is entailed by <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">!");
 	        else
-	        	System.out.println("No - Axiom: " + axiomStr + " is not entailed by <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">!");
+	        	System.out.println("No - Axiom: '" + axiomStr + "' is not entailed by <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">!");
 	        System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
@@ -445,9 +472,9 @@ public class SimpleOWLReasoner
         reasoner.flush();
         try {
         	if (reasoner.isSatisfiable(cls))
-        		System.out.println("Yes - Class: " + clsStr + " is satisfiable with respect to <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">!");
+        		System.out.println("Yes - Class: '" + clsStr + "' is satisfiable with respect to <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">!");
         	else
-        		System.out.println("No - Class: " + clsStr + " is UNsatisfiable with respect to <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">!");
+        		System.out.println("No - Class: '" + clsStr + "' is UNsatisfiable with respect to <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + ">!");
 	        System.out.println();
         }
         catch (InconsistentOntologyException ioe) {
@@ -461,12 +488,13 @@ public class SimpleOWLReasoner
     */
 	public void explainUnsatisfiability(String clsStr)
 	{
+		System.out.println();
 		reasoner.flush();
 		try {
 			explanationGenerator = new DefaultExplanationGenerator(ontology.getOWLOntologyManager(), reasonerFactory, ontology, new SilentExplanationProgressMonitor());
 			OWLClassExpression cls = parser.createClassExpression(clsStr);
 			if (!reasoner.isSatisfiable(cls)) {
-	        	System.out.println("Explanation for unsatisfiability of " + clsStr);
+	        	System.out.println("Explanation for unsatisfiability of '" + clsStr + "'");
 	    		for (int i = 0; i < clsStr.length()+37;i++)
 	    			System.out.print("-");
 	            System.out.println();
@@ -487,6 +515,7 @@ public class SimpleOWLReasoner
 			else {
 				System.out.println();
 				System.out.println("SimpleOWLAPI REASONING ERROR: explanation of class UNsatisfiability is not possible because Class: " + Parser.renderer.render(cls) + " is satisfiable!");
+				System.out.println();
 			}
 		}
 		catch (InconsistentOntologyException ioe) {
@@ -499,6 +528,7 @@ public class SimpleOWLReasoner
     */
 	public void explainInconsistency()
 	{
+		System.out.println();
 		reasoner.flush();
         inconsistencyExpFac = new InconsistentOntologyExplanationGeneratorFactory(reasonerFactory, Long.MAX_VALUE);
         inconsistencyExplanationGenerator = inconsistencyExpFac.createExplanationGenerator(ontology);
@@ -520,6 +550,7 @@ public class SimpleOWLReasoner
 		else {
 			System.out.println();
 			System.out.println("SimpleOWLAPI REASONING ERROR: explanation for inconsistency of <" + ontology.getOntologyID().getDefaultDocumentIRI().get().toString() + "> is not possible because it " + " is consistent!");
+			System.out.println();
 		}
 	}
 
@@ -528,13 +559,14 @@ public class SimpleOWLReasoner
     */
 	public void explainEntailment(String axiomStr)
 	{
+		System.out.println();
 		reasoner.flush();
 		try {
 			explanationGenerator = new DefaultExplanationGenerator(ontology.getOWLOntologyManager(), reasonerFactory, ontology, new SilentExplanationProgressMonitor());
 			OWLAxiom axiom = parser.createAxiom(axiomStr);
 			Set<Set<OWLAxiom>> explanations = explanationGenerator.getExplanations(axiom);
 			
-        	System.out.println("Explanation for entailment of " + axiomStr + ":");
+        	System.out.println("Explanation for entailment of '" + axiomStr + "':");
     		for (int i = 0; i < axiomStr.length()+31;i++)
     			System.out.print("-");
             System.out.println();

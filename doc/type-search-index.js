@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"org.semanticweb.owl.simpleowlapi","l":"Parser"},{"p":"org.semanticweb.owl.simpleowlapi","l":"Provider"},{"p":"org.semanticweb.owl.simpleowlapi","l":"SelectedReasoner"},{"p":"org.semanticweb.owl.simpleowlapi","l":"SimpleOWLAPIFactory"},{"p":"org.semanticweb.owl.simpleowlapi","l":"SimpleOWLReasoner"}]

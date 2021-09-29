@@ -55,6 +55,12 @@ SimpleOWLAPIFactory s = new SimpleOWLAPIFactory();
 s.createOntology("http://com.kodymoodley/ontologies/2020/testontology#");
 // create multiple class names (each separated by a space) and add them to the currently selected ontology
 s.createClasses("Penguin Peacock Bird Robin FlyingOrganism Fish Wing Gender Person Female Male");
+
+// change namespace of the editor (temporarily) so we can add or reuse terms from external ontologies or vocabularies
+s.setNamespace("http://schema.org/");
+// add an object property to the same ontology which will now have the IRI <http://schema.org/parent> (reusing the term from Schema.org)
+s.createObjectProperty("parent");
+
 // create multiple object properties (each separated by a space) and add them to the currently selected ontology
 s.createObjectProperties("hasPart isPartOf hasGender knows eats hunts");
 // create multiple named individuals (each separated by a space) and add them to the currently selected ontology

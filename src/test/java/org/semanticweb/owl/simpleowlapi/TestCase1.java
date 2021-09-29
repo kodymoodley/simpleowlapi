@@ -30,10 +30,12 @@ public class TestCase1 {
 SimpleOWLAPIFactory s = new SimpleOWLAPIFactory();
 
 s.createOntology("http://ids.maastrichtuniversity.nl/ontologies/dsm-workshop/s12/s12firstontology#");
-
-s.setOWLReasoner(SelectedReasoner.PELLET);
+s.setFullIRIRendering(true);
+s.setOWLReasoner(SelectedReasoner.HERMIT);
 // -- Task A: answer here --
 s.createClasses("CurdlingProcess ChemicalReaction BioChemicalReaction");
+
+s.setNamespace("http://schema.org/");
 s.createClasses("Enzyme Protein Catalyst ChemicalCompound Rennet Protease Cheese Nutrient Amylase Starch Ribozyme");
 s.createClasses("BiologicalCell Mammal MammaryGland");
 
@@ -46,7 +48,7 @@ s.createDataProperties("has_mol_mass description");
 // -- Task D: answer here --
 s.createIndividuals("chymosin casein dolly amylopectin glycogenase");
 
-s.printOntology();
+
 
 s.owlReasoner.isEntailed("Rennet subClassOf Protein");
 
@@ -62,6 +64,8 @@ s.createAxiom("Protease or Amylase SubClassOf Enzyme");
 s.createAxiom("Mammal subClassOf hasPart exactly 2 MammaryGland");
 s.createAxiom("Starch SubClassOf Nutrient");
 s.createAxiom("Ribozyme SubClassOf Enzyme and not Protein");
+
+
 //s.createAxiom("dolly Type: Mammal and hasPart exactly 3 MammaryGland");
 
 s.owlReasoner.isEntailed("Rennet subClassOf Protein");
@@ -73,6 +77,8 @@ s.createAxiom("breaksDownProtein subPropertyOf: breaksDown");
 s.createAxiom("breaksDownStarch subPropertyOf: breaksDown");
 s.createObjectPropertyAssertion("chymosin breaksDownProtein casein");
 s.createObjectPropertyAssertion("glycogenase breaksDownStarch amylopectin");
+
+
 
 s.owlReasoner.getTypes("casein");
 s.owlReasoner.getTypes("chymosin");
@@ -86,6 +92,8 @@ s.createAxiom("breaksDownProtein Domain: Protease");
 s.createAxiom("breaksDownProtein Range: Protein");
 s.createAxiom("breaksDownStarch Domain: Amylase");
 s.createAxiom("breaksDownStarch Range: Starch");
+
+s.printOntology();
 
 s.owlReasoner.getTypes("casein");
 s.owlReasoner.getTypes("chymosin");
@@ -114,11 +122,13 @@ s.printOntologyStats();
 
 s.printOntology();
 
+s.owlReasoner.explainInconsistency();
+
 s.owlReasoner.getUnsatisfiableClasses();
 
 s.owlReasoner.explainUnsatisfiability("Ribozyme");
 
-//s.saveOntology("s12-dsm-ontologies-workshop.owl");
+s.saveOntology("test-ken3140.owl");
 
 	}
 }
