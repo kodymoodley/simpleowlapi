@@ -35,7 +35,7 @@ Include the following dependency in your pom.xml
 <dependency>
     <groupId>net.sourceforge.simpleowlapi</groupId>
     <artifactId>simpleowlapi-lib</artifactId>
-    <version>1.0.0</version>
+    <version>1.2.1</version>
 </dependency>
 ```
 
